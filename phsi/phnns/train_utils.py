@@ -150,6 +150,12 @@ def train(model, integrator, traindata, optimizer, valdata=None, epochs=1, batch
                 print(f'Stored new best model {best_path}')
             newbest = False
 
+    if verbose:
+        print(f'\nFinished training after epoch {epoch}')
+        print(f'Training loss: {np.format_float_scientific(avg_loss, 2)}')
+        if isinstance(model, (HSI, PHSI, BaselineSI, HSI_Y4)):
+            model.si_print()
+            
     return best_model, vloss
 
 
