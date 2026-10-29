@@ -243,7 +243,8 @@ class EquationTests(unittest.TestCase):
         text = model.equations(expand=True)
         self.assertIn("dx1/dt = 0", text)
         gradient, rates = displayed(text, np.array([0.2, 0.4]), model, 0.5)
-        np.testing.assert_array_equal(gradient, 0.0)
+        # Subtracting displayed forcing can leave machine-precision roundoff.
+        np.testing.assert_allclose(gradient, 0.0, rtol=0.0, atol=np.finfo(float).eps)
         np.testing.assert_allclose(rates, model.field_.numpy_rhs([0.2, 0.4], 0.5))
         model.field_.energy.mask[0] = 1.0
         coefficients = np.zeros(model.field_.energy.library.n_features)
