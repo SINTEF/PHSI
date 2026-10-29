@@ -1,0 +1,61 @@
+name: Publish to PyPI
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (must match pyproject.toml, e.g. 1.0.0a1)'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: pypi-publish
+  cancel-in-progress: false
+jobs:
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Check the requested version
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+        run: |
+          python - <<'PYTHON'
+          import os, tomllib
+          with open('pyproject.toml', 'rb') as source:
+              version = tomllib.load(source)['project']['version']
+          if version != os.environ['RELEASE_VERSION']:
+              raise SystemExit(f'Requested version does not match {version}')
+          PYTHON
+      - run: python -m pip install '.[dev,examples]' 'twine>=6.1'
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: python -m pytest
+      - run: python -m build
+      - run: python -m twine check --strict dist/*
+      - run: PHSI_DIST_DIR=dist python -m pytest tests/test_distribution.py
+      - uses: actions/upload-artifact@v5
+        with:
+          name: distributions
+          path: dist/
+          if-no-files-found: error
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/phsi-models/
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v6
+        with:
+          name: distributions
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

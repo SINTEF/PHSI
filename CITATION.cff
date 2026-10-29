@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "Please also cite the relevant method papers listed in README.md."
+type: software
+title: "phsi-models: Port-Hamiltonian system identification"
+version: 1.0.0a1
+abstract: "Canonical, fully observed system identification with analytic, neural and hybrid energy, damping and input-gain components."
+authors:
+  - name: "SINTEF"
+repository-code: "https://github.com/SINTEF/PHSI"
+keywords:
+  - system identification
+  - port-Hamiltonian systems
+  - scientific machine learning

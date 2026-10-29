@@ -1,0 +1,422 @@
+{
+  "schema": "phsi-source-provenance-v1",
+  "recorded_date": "2026-10-28",
+  "scope": "Source and adaptation inventory, not a license clearance or scientific acceptance receipt.",
+  "source_root_label": "private IFAC-SYSID comparison workspace; paths below are relative to that workspace",
+  "handover": {
+    "path": "output/github-release-handover-20261028/HANDOVER.md",
+    "sha256": "4f5a96fa5d5adba383be438919ba76c667547dcfdcdeaf66993e1d6c626ddf44",
+    "source_map_sha256": "0e7f2cedf525578184f3eb878a0e152d112d614ba4d29b4ae74c8ccfa7bfdd29"
+  },
+  "snapshots": {
+    "missing_code_v001": {
+      "location": "comparison/results/sysid2027-table1-missing-20261028-a01/code/v001",
+      "source_manifest_sha256": "6cc1a21069f4dc5c901762ceaa5930f86e5c9462a4fd5e6f3b10f9ee6288c120"
+    },
+    "pruning_code_v001": {
+      "location": "comparison/results/sysid2027-pruning-refit-20261028-a01/code/v001",
+      "source_manifest_sha256": "d83889029d70175cba62621b14a78a644213a0d9c8eba5f58b9e450c87d935b0"
+    }
+  },
+  "core_files": {
+    "src/phsi/__init__.py": {
+      "classification": "new public exports",
+      "origins": []
+    },
+    "src/phsi/libraries.py": {
+      "classification": "adapted numerical operations and new specifications",
+      "origins": [
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/features.py",
+          "sha256": "acf7f6f212af0673ee27264e85efc90181ee012755b926ee3a5535711ff55280",
+          "operations": [
+            "exponent_table",
+            "monomial_names",
+            "monomials_np",
+            "monomial_grads_np",
+            "monomials_torch",
+            "monomial_grads_torch"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/energy_library.py",
+          "sha256": "7e4e3afb7206276c4018d5703f75e5679e4e37d0ce440c62a25db2206651227a",
+          "operations": [
+            "smooth_values_np",
+            "smooth_gradients_np",
+            "smooth_values_torch",
+            "smooth_gradients_torch",
+            "resolve_library"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/models.py",
+          "sha256": "9c1882cfe3653313382d5a8ea5a78107ee11f117d863115a193eac16a0c4b7ec",
+          "operations": [
+            "damping_feature_list",
+            "damping_features_np",
+            "damping_features_torch"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/input_gain.py",
+          "sha256": "197d0ba0698c6ef5a593d7256c5fe32efd181a0f1576682cdf9ad11787d68e5f",
+          "operations": [
+            "gain_features_np",
+            "gain_features_torch",
+            "resolve_gain"
+          ]
+        }
+      ],
+      "upstream": [
+        "original_phsi",
+        "siphy",
+        "phnn"
+      ]
+    },
+    "src/phsi/fields.py": {
+      "classification": "adapted numerical components and new measured-input composition",
+      "origins": [
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/models.py",
+          "sha256": "9c1882cfe3653313382d5a8ea5a78107ee11f117d863115a193eac16a0c4b7ec",
+          "operations": [
+            "FixedLibraryEnergy",
+            "NeuralEnergy",
+            "ConstantDamping",
+            "FeatureDamping",
+            "NeuralDamping",
+            "PHModel",
+            "make_model",
+            "numpy_rhs"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/input_gain.py",
+          "sha256": "197d0ba0698c6ef5a593d7256c5fe32efd181a0f1576682cdf9ad11787d68e5f",
+          "operations": [
+            "LibraryInputGain",
+            "NeuralInputGain",
+            "make_gain"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/features.py",
+          "sha256": "acf7f6f212af0673ee27264e85efc90181ee012755b926ee3a5535711ff55280",
+          "operations": [
+            "basis_scales"
+          ]
+        }
+      ],
+      "upstream": [
+        "original_phsi",
+        "phnn"
+      ]
+    },
+    "src/phsi/integrators.py": {
+      "classification": "adapted small numerical extraction; integration formulas retained",
+      "origins": [
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/integrators.py",
+          "sha256": "eb3dfd602e934c8765444b965a459b044dbb31718bcb90dc6019b19be5324b78",
+          "operations": [
+            "srk4_derivative",
+            "rk4_step",
+            "rollout"
+          ]
+        }
+      ],
+      "upstream": [
+        "phnn",
+        "original_phsi"
+      ]
+    },
+    "src/phsi/regression.py": {
+      "classification": "adapted canonical joint design, bounds and independent shrinking supports",
+      "origins": [
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/regression.py",
+          "sha256": "4a8402077c1c46348492c9149e813d1e977e23fa62b196b2ccaea69cdfc44802",
+          "operations": [
+            "build_design",
+            "build_input_map_design",
+            "design_from_samples",
+            "input_map_design_from_samples",
+            "bounded_lstsq"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/pruning_regression.py",
+          "sha256": "3c38f17ff3ddfe188b712673cbcb25d9f212d8c9f9b169fa065bd148878fe6f3",
+          "operations": [
+            "stlsq_independent"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/missing_regression.py",
+          "sha256": "4f79f25281332d17d3c2222c8b9923645d4858aae527f0a19886207652572aa7",
+          "operations": [
+            "stlsq_damping_independent"
+          ]
+        }
+      ],
+      "upstream": [
+        "siphy"
+      ]
+    },
+    "src/phsi/fitting.py": {
+      "classification": "new public fitting driver adapting frozen objectives and scientific policies",
+      "origins": [
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/losses.py",
+          "sha256": "ace0f67a92521155918b10d8c8fe54916d0dc942121739b68690950d1ed4239a",
+          "operations": [
+            "loss_local_residual",
+            "loss_rollout",
+            "nrmse"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/missing_dense.py",
+          "sha256": "2eb326b0432f3119eb8cb593ff466b42d0a14114e456850bcf8f61b39f905e13",
+          "operations": [
+            "run_job initialization, optimizer, validation and deadline policies"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/pruning_common.py",
+          "sha256": "6c66732f94c17e715430c7b2683e248d6638aab64d9660a7f4cfb7d939b48993",
+          "operations": [
+            "threshold_pairs",
+            "damping_scales",
+            "apply_masks",
+            "CandidateLedger"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/pruning_adam.py",
+          "sha256": "f1a60fbd243ebacc52a54bdb14354b92801ea0211524752f7676eb45f63144df",
+          "operations": [
+            "work_can_start",
+            "run_job fixed-mask refit policies"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/pruning_regression.py",
+          "sha256": "3c38f17ff3ddfe188b712673cbcb25d9f212d8c9f9b169fa065bd148878fe6f3",
+          "operations": [
+            "select_completed",
+            "checkpoint_eligible"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/missing_regression.py",
+          "sha256": "4f79f25281332d17d3c2222c8b9923645d4858aae527f0a19886207652572aa7",
+          "operations": [
+            "select_candidates"
+          ]
+        }
+      ],
+      "upstream": [
+        "phnn",
+        "original_phsi",
+        "siphy",
+        "nhode_method"
+      ]
+    },
+    "src/phsi/data.py": {
+      "classification": "new observation-only arrays and measured-input interface; smoothing/scaling adapted",
+      "origins": [
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/data.py",
+          "sha256": "df37a0416fc506ef836d180bbb765064d8978973b565c9870ebbcdb4e4436e00",
+          "operations": [
+            "Dataset observed sample views and scale conventions"
+          ]
+        },
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/train.py",
+          "sha256": "114b653206b85ff8f078b56d3dec4fef600260b95897bd0a81bfb65d1a4a129e",
+          "operations": [
+            "Trainer observation preprocessing"
+          ]
+        }
+      ],
+      "upstream": []
+    },
+    "src/phsi/simulation.py": {
+      "classification": "adapted independent adaptive simulation; new measured-input and partial-failure interface",
+      "origins": [
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/evaluate.py",
+          "sha256": "83c83d9caba688cefa865161d7a0d805c30ab707f5ec1b0ede4493612687fab8",
+          "operations": [
+            "simulate_learned"
+          ]
+        }
+      ],
+      "upstream": []
+    },
+    "src/phsi/persistence.py": {
+      "classification": "new model artifact format, strict reconstruction and atomic tensor persistence",
+      "origins": [
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/pruning_common.py",
+          "sha256": "6c66732f94c17e715430c7b2683e248d6638aab64d9660a7f4cfb7d939b48993",
+          "operations": [
+            "atomic_json durability and CandidateLedger checkpoint eligibility conventions"
+          ]
+        }
+      ],
+      "upstream": []
+    },
+    "src/phsi/estimator.py": {
+      "classification": "new public facade and equation formatting; numerical work delegates to listed components",
+      "origins": [],
+      "upstream": []
+    },
+    "src/phsi/errors.py": {
+      "classification": "new public failure contracts; support-nonconvergence meaning retained",
+      "origins": [
+        {
+          "snapshot": "missing_code_v001",
+          "path": "phcompare/pruning_regression.py",
+          "sha256": "3c38f17ff3ddfe188b712673cbcb25d9f212d8c9f9b169fa065bd148878fe6f3",
+          "operations": [
+            "SupportNonconvergence"
+          ]
+        }
+      ],
+      "upstream": []
+    }
+  },
+  "selection_policy_sources": {
+    "missing_selector": {
+      "path": "comparison/results/sysid2027-table1-missing-20261028-a01/code/selection001/select_campaign.py",
+      "sha256": "d870808185717ee9ee8d9cfe4208165ed3d49e8cff0ab561e3c6cd1a1943c7ae",
+      "relationship": "complete-grid eligibility and deterministic validation-only selection policies; campaign script not shipped"
+    },
+    "pruning_selector": {
+      "path": "comparison/results/sysid2027-pruning-refit-20261028-a01/code/selection-check002/select_campaign.py",
+      "sha256": "462ec51126c53e21682f04ec9be294e3efa1e18ba032b8af8f217842d48fba1d",
+      "relationship": "complete-grid eligibility and deterministic validation-only selection policies; campaign script not shipped"
+    }
+  },
+  "upstream": {
+    "phnn": {
+      "supplied_directory": "Existing codebases/pseudo-hamiltonian-neural-networks-main",
+      "repository_url": "https://github.com/SINTEF/pseudo-hamiltonian-neural-networks",
+      "root_named_license_files": [
+        "LICENSE"
+      ],
+      "status": "two MIT notices preserved"
+    },
+    "original_phsi": {
+      "supplied_directory": "Existing codebases/PHSI-main",
+      "repository_url": "https://github.com/SINTEF/PHSI",
+      "root_named_license_files": [],
+      "status": "reuse in MIT-licensed phsi authorized by the project owner on 2026-10-28; no named root license verified in supplied tree"
+    },
+    "siphy": {
+      "supplied_directory": "Existing codebases/siphy_code",
+      "repository_url": null,
+      "root_named_license_files": [],
+      "status": "reuse in MIT-licensed phsi authorized by the project owner on 2026-10-28; no named root license verified in supplied tree",
+      "public_source_status": "Supplied unpublished source; no public repository URL asserted."
+    },
+    "nhode_method": {
+      "supplied_directory": "Existing codebases/nhode-main",
+      "repository_url": "https://github.com/sunnivameltzer/nhode",
+      "root_named_license_files": [],
+      "status": "reuse in MIT-licensed phsi authorized by the project owner on 2026-10-28; no named root license verified in supplied tree",
+      "relationship": "Trajectory-fitting method attribution; JAX scripts are not transplanted."
+    }
+  },
+  "preserved_notices": [
+    {
+      "source": "Existing codebases/pseudo-hamiltonian-neural-networks-main/LICENSE",
+      "preserved_as": "third_party/phnn-root-LICENSE",
+      "sha256": "1516f1b9f8333d2edb1687841f84517896b3acd7fe5198bbf00f280f3009b0f8",
+      "unchanged": true
+    },
+    {
+      "source": "Existing codebases/pseudo-hamiltonian-neural-networks-main/phlearn/LICENSE.txt",
+      "preserved_as": "third_party/phnn-phlearn-LICENSE.txt",
+      "sha256": "76a55b5d7f5a874b4ffd1ae0c6f5c32c6996dde7b47dbcf1dd608f2d08e9b8c5",
+      "unchanged": true
+    }
+  ],
+  "legacy": {
+    "branch": "legacy_phsi",
+    "revision": "353c4fbc3b4344345523864195dab91312ebead9",
+    "named_license_files": [],
+    "preserved": true
+  },
+  "recipe_metadata": {
+    "path": "reproduce/presets.json",
+    "source_manifests": [
+      {
+        "campaign": "sysid2027-table1-missing-20261028-a01",
+        "sha256": "be94f38de8ab0f35f7402fef23679f70acdd0455f83e61de1adc68d269f9383f",
+        "rows": 246
+      },
+      {
+        "campaign": "sysid2027-pruning-refit-20261028-a01",
+        "sha256": "35c2ab33e45446b3a9082bd055934924f108350659434ccb45299c736ccf6bda",
+        "rows": 153
+      }
+    ],
+    "relationship": "metadata extraction only; no source observation or model payload opened"
+  },
+  "boundaries": {
+    "wholesale_upstream_source_files_copied": false,
+    "preserved_license_files_copied_unchanged": true,
+    "private_campaign_imports": false,
+    "literature_pdfs_copied": false,
+    "observations_or_trained_models_copied": false,
+    "upstream_permissions_resolved": true,
+    "project_wide_license_applied": true
+  },
+  "adaptations": [
+    "All integration-scheme stages participate in differentiation.",
+    "Simulation-error training differentiates through discrete explicit fourth-order Runge-Kutta steps.",
+    "Hamiltonian flow splines are omitted.",
+    "Derivative and midpoint designs use observed position rates in damping columns.",
+    "Pruning uses independent component thresholds, physical contribution scales, empty supports, and fresh fixed-mask Adam refits.",
+    "Complete-grid validation-only selection and deadline-bound durable saves are retained.",
+    "Measured-input interpolation and arbitrary even state dimensions extend the original benchmark-specific interface."
+  ],
+  "reuse_authorization": {
+    "date": "2026-10-28",
+    "authority": "project owner",
+    "scope": "Use of all four underlying codebases in phsi and publication of phsi under the MIT license.",
+    "upstream_keys": [
+      "phnn",
+      "original_phsi",
+      "siphy",
+      "nhode_method"
+    ],
+    "publication_performed": false
+  }
+}

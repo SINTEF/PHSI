@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=77.0.3", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phsi-models"
+version = "1.0.0a1"
+description = "Port-Hamiltonian system identification with analytic and neural components"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "third_party/phnn-root-LICENSE", "third_party/phnn-phlearn-LICENSE.txt"]
+requires-python = ">=3.11"
+classifiers = ["Development Status :: 3 - Alpha"]
+dependencies = ["numpy>=2.3,<3", "scipy>=1.16,<2", "torch>=2.9,<3", "tqdm>=4.66,<5"]
+
+[project.optional-dependencies]
+plots = ["matplotlib>=3.7"]
+examples = ["matplotlib>=3.7", "jupyterlab>=4", "nbclient>=0.10", "ipykernel>=6", "ipywidgets>=8,<9"]
+dev = ["build>=1.2", "pytest>=8", "nbformat>=5", "nbclient>=0.10", "ipykernel>=6", "ruff==0.17.3"]
+
+[project.urls]
+Repository = "https://github.com/SINTEF/PHSI"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+extend-exclude = [".local", "examples/output"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "D209", "D213", "D300"]
+
+[tool.ruff.lint.per-file-ignores]
+"examples/*.ipynb" = ["E402"]

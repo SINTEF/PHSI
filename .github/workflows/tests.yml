@@ -1,0 +1,25 @@
+name: Tests and build
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install -e '.[dev,examples]'
+      - run: ruff check .
+      - run: ruff format --check .
+      - run: python -m pytest
+      - run: python -m build
+      - run: PHSI_DIST_DIR=dist python -m pytest tests/test_distribution.py

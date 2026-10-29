@@ -1,0 +1,18 @@
+include README.md CITATION.cff LICENSE AGENTS.md
+recursive-include docs *.md *.json
+recursive-include examples *.py *.ipynb
+recursive-include reproduce *.py *.json *.md
+recursive-include third_party *
+recursive-include .github *.yml
+prune .local
+prune .venv
+prune build
+prune dist
+# Discard stale capitalized paths from cached source lists after the folder rename.
+prune Examples
+prune examples/output
+prune examples/.ipynb_checkpoints
+prune reproduce/.ipynb_checkpoints
+global-exclude .DS_Store *.py[cod]
+exclude docs/public-agent-guide.md
+exclude docs/verification.md RELEASE_POLICY.md
