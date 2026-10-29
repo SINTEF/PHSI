@@ -14,14 +14,22 @@ The package supports fully observed canonical coordinates, diagonal damping and 
 python -m pip install 'phsi-models==1.0.0a1'
 ```
 
-Or with uv:
+In your own uv project, add the package once, then run your script:
 
 ```bash
-uv venv
-uv pip install 'phsi-models==1.0.0a1'
+uv add 'phsi-models==1.0.0a1'
+uv run your_script.py
 ```
 
-For an editable checkout with notebook dependencies, use `python -m pip install -e '.[examples]'`. This alpha precedes the paper release; the interface may still change.
+In a cloned PHSI repository, run from the repository root; uv installs the local package and its dependencies automatically:
+
+```bash
+uv run your_script.py
+```
+
+To open the notebooks with their optional dependencies, use `uv run --extra examples jupyter lab`. With pip, install an editable checkout using `python -m pip install -e '.[examples]'`.
+
+This alpha precedes the paper release; the interface may still change.
 
 ## Quickstart
 
