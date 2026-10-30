@@ -137,6 +137,9 @@ def build_design(field, x, rates, u):
 def bounded_lstsq(A, b, n_signed):
     """
     Fit coefficients with either sign for energy/gain and nonnegative damping.
+
+    Returned coefficients correct roundoff at the damping bound; the accompanying
+    result retains the original solver coefficients and diagnostics.
     """
     A, b = np.asarray(A, dtype=float), np.asarray(b, dtype=float)
     if (
@@ -168,7 +171,16 @@ def bounded_lstsq(A, b, n_signed):
         tol=1e-12,
         max_iter=5000,
     )
-    return result.x, result
+    coefficients = result.x.copy()
+    if result.success:
+        damping = coefficients[n_signed:]
+        # BVLS can leave cancellation roundoff at an active zero bound.
+        if np.any(damping < -64 * np.finfo(float).eps):
+            raise RuntimeError(
+                "Bounded least squares returned negative damping beyond roundoff."
+            )
+        damping[damping < 0] = 0.0
+    return coefficients, result
 
 
 def _samples(trajectory, method):

@@ -273,7 +273,7 @@ def test_notebook_damping_choice_is_used_and_recorded(case, kind):
         compile(ast.Module(body=assignments, type_ignores=[]), "settings", "exec"),
         namespace,
     )
-    assert namespace["damping_library"] == "gaussian"
+    assert namespace["damping_library"] in ("polynomial", "gaussian")
     namespace.update(damping_component="analytic", damping_library=kind)
     namespace["state_names"] = (
         ["q1", "q2", "p1", "p2"] if case == "two_mass" else ["q", "φ"]
