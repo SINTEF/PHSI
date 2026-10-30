@@ -51,13 +51,16 @@ class LogCoshExtension:
 @dataclass
 class DampingLibrary:
     """
-    Default damping functions, or a library with chosen Gaussian widths.
+    Nonnegative damping features for each momentum or flux coordinate.
+
+    'polynomial' uses a constant and the squared coordinate. 'gaussian' adds
+    14 Gaussian functions; 'main' is its alias. 'diagnostic' uses chosen widths.
 
     Custom functions accept coordinates shaped (..., 1); each returns (...,).
     Supply names and a key to identify these functions when reloading.
     """
 
-    kind: str = "main"
+    kind: str = "gaussian"
     widths: object = None
     functions: object = None
     names: object = None
@@ -305,15 +308,19 @@ def resolve_library(
         if request.functions is not None:
             request = _custom_damping(request)
         else:
-            if request.kind not in ("main", "diagnostic"):
-                raise ValueError("Damping library kind must be main or diagnostic.")
-            if request.kind == "main":
+            if request.kind not in ("polynomial", "gaussian", "main", "diagnostic"):
+                raise ValueError(
+                    "Damping library kind must be polynomial, gaussian, main "
+                    "or diagnostic."
+                )
+            features = []
+            if request.kind in ("gaussian", "main"):
                 features = [
                     dict(kind="gaussian", axis=0, centre=float(c), width=w)
                     for w in (0.3, 0.6)
                     for c in np.linspace(-1.5, 1.5, 7)
                 ]
-            else:
+            elif request.kind == "diagnostic":
                 widths = (0.25, 0.5, 1.0) if request.widths is None else request.widths
                 features = [
                     dict(kind="gaussian", axis=0, centre=0.0, width=float(w))
