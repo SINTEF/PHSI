@@ -47,7 +47,7 @@ model = phsi.model(
 )
 ```
 
-This example uses states ordered as `(position, momentum)` and learns polynomial energy and forcing gain. Use `"nn"` for a neural network model instead of an analytic expression. See the [method notes](docs/methods.md) for component choices and fitting options.
+This example uses states ordered as `(position, momentum)` and learns polynomial energy and forcing gain. Use `"nn"` for a neural network model instead of an analytic expression. For analytic damping, use `phsi.DampingLibrary(kind="polynomial")` or `phsi.DampingLibrary(kind="gaussian")`. See the [method notes](docs/methods.md) for component choices and fitting options.
 
 ### Fit observations
 

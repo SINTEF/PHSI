@@ -251,3 +251,37 @@ def test_notebook_save_cell_can_be_repeated(case, tmp_path):
     exec(save_cell, namespace)
     np.testing.assert_allclose(namespace["restored"].damping([0.1, 0.2]), [0.375123])
     assert namespace["restored"].equations() == model.equations()
+
+
+@pytest.mark.parametrize("case", ["two_mass", "electric_circuit"])
+@pytest.mark.parametrize("kind", ["polynomial", "gaussian"])
+def test_notebook_damping_choice_is_used_and_recorded(case, kind):
+    import ast
+
+    notebook = nbformat.read(ROOT / "examples" / f"{case}.ipynb", as_version=4)
+    sources = [cell.source for cell in notebook.cells if cell.cell_type == "code"]
+    settings_cell = next(source for source in sources if "energy_component =" in source)
+    assignments = [
+        node
+        for node in ast.parse(settings_cell).body
+        if isinstance(node, ast.Assign)
+        and isinstance(node.targets[0], ast.Name)
+        and node.targets[0].id not in ("output", "examples")
+    ]
+    namespace = {"phsi": phsi}
+    exec(
+        compile(ast.Module(body=assignments, type_ignores=[]), "settings", "exec"),
+        namespace,
+    )
+    assert namespace["damping_library"] == "gaussian"
+    namespace.update(damping_component="analytic", damping_library=kind)
+    namespace["state_names"] = (
+        ["q1", "q2", "p1", "p2"] if case == "two_mass" else ["q", "φ"]
+    )
+    fitting_cell = next(source for source in sources if "model.fit(" in source)
+    exec(fitting_cell.split("model.fit(", 1)[0], namespace)
+    assert namespace["model"].damping_spec.kind == kind
+    data_cell = next(source for source in sources if 'settings["learner"]' in source)
+    namespace["generate_dataset"] = lambda settings: {}
+    exec(data_cell.split("save_dataset(", 1)[0], namespace)
+    assert namespace["settings"]["learner"]["damping_library"] == kind
