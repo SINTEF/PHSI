@@ -92,6 +92,34 @@ class RegressionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             bounded_lstsq(np.array([[np.nan]]), np.ones(1), 1)
 
+    def test_solver_roundoff_at_damping_bound(self):
+        # A successful BVLS solve can leave a mathematically zero coefficient
+        # slightly negative; this was observed in the two-mass notebook.
+        solved = SimpleNamespace(
+            x=np.array([-2.0, -3.3881317890172014e-20, 0.5]), success=True
+        )
+        with patch("phsi.regression.lsq_linear", return_value=solved):
+            coef, result = bounded_lstsq(np.eye(3), np.zeros(3), 1)
+        np.testing.assert_array_equal(coef, [-2.0, 0.0, 0.5])
+        np.testing.assert_array_equal(result.x, [-2.0, -3.3881317890172014e-20, 0.5])
+        field, _ = self.field(dimension=4)
+        field.damping.set_physical(coef[1:])
+        np.testing.assert_allclose(field.damping.physical_coefficients(), [0.0, 0.5])
+
+    def test_solver_rejects_material_damping_bound_violation(self):
+        # Large signed energy/gain coefficients must not relax the damping bound.
+        solved = SimpleNamespace(x=np.array([-1e20, -1e-6, 1e20]), success=True)
+        with patch("phsi.regression.lsq_linear", return_value=solved):
+            with self.assertRaisesRegex(RuntimeError, "damping"):
+                bounded_lstsq(np.eye(3), np.zeros(3), 1)
+
+    def test_solver_roundoff_handling_preserves_unsuccessful_status(self):
+        solved = SimpleNamespace(x=np.array([-2.0, -1e-6]), success=False)
+        with patch("phsi.regression.lsq_linear", return_value=solved):
+            coef, result = bounded_lstsq(np.eye(2), np.zeros(2), 1)
+        self.assertFalse(result.success)
+        np.testing.assert_array_equal(coef, [-2.0, -1e-6])
+
     def test_derivative_and_midpoint_adapters(self):
         f, _ = self.field()
         t = np.arange(12.0) * 0.1
