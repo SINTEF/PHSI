@@ -4,7 +4,7 @@ The first candidate is `phsi-models==1.0.0a1`: alpha 1 of the planned 1.0.0 rele
 
 ## Source permissions
 
-Source-permission clearance is complete based on the project owner's explicit authorization on 28 October 2026 to reuse all four underlying codebases and release this package under the MIT license. The authorization is recorded in [license status](license-status.md) and [source provenance](source-provenance.json). `LICENSE` contains the package license; both supplied upstream notices are preserved in `third_party/` and in the distributions. Attribution remains in the README and [attribution notes](attribution.md), including “not yet public” for the sparse-identification repository.
+Source-permission clearance is complete based on the project owner's explicit authorization on 28 October 2026 to reuse all four underlying codebases and release this package under the MIT license. The authorization is recorded in [license status](license-status.md) and [source provenance](source-provenance.json). `LICENSE` contains the package license; both supplied upstream notices are preserved in [LICENSE](../LICENSE) and in the distributions. Attribution remains in the README and [attribution notes](attribution.md), including “not yet public” for the sparse-identification repository.
 
 There is no additional PyPI source-clearance form. Keep these records and notices with future releases; separately assess the terms of any new source material added later.
 

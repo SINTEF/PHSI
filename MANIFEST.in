@@ -2,7 +2,6 @@ include README.md CITATION.cff LICENSE AGENTS.md
 recursive-include docs *.md *.json
 recursive-include examples *.py *.ipynb
 recursive-include reproduce *.py *.json *.md
-recursive-include third_party *
 recursive-include .github *.yml
 prune .local
 prune .venv

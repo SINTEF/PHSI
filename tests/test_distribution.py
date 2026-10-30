@@ -15,12 +15,23 @@ import pytest
     reason="Set PHSI_DIST_DIR after building distributions.",
 )
 def test_distribution_keeps_private_instructions_out_and_examples_lowercase():
+    license_text = (Path(__file__).parents[1] / "LICENSE").read_bytes()
+    for notice in (
+        b"Copyright (c) 2026 SINTEF and contributors",
+        b"Copyright (c) 2025 SINTEF",
+        b"Copyright (c) [2022] [SINTEF Digital]",
+    ):
+        assert notice in license_text
     directory = Path(os.environ["PHSI_DIST_DIR"])
     sources = list(directory.glob("phsi_models-*.tar.gz"))
     wheels = list(directory.glob("phsi_models-*.whl"))
     assert sources and wheels
     for source in sources:
         with tarfile.open(source) as archive:
+            license_name = next(
+                name for name in archive.getnames() if name.endswith("/LICENSE")
+            )
+            assert archive.extractfile(license_name).read() == license_text
             names = {
                 name.split("/", 1)[1] for name in archive.getnames() if "/" in name
             }
@@ -54,6 +65,11 @@ def test_distribution_keeps_private_instructions_out_and_examples_lowercase():
             assert "phsi/__init__.py" in names
             assert "License-Expression: MIT" in metadata
             assert "License-File: LICENSE\n" in metadata
+            assert metadata.count("License-File: ") == 1
+            license_name = next(
+                name for name in names if name.endswith(".dist-info/licenses/LICENSE")
+            )
+            assert archive.read(license_name) == license_text
             assert not any("LICENSE-MIT.proposed" in name for name in names)
         assert not any(
             name.endswith("/AGENTS.md") or name == "AGENTS.md" or ".local/" in name

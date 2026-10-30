@@ -8,7 +8,7 @@ version = "1.0.0a1"
 description = "Port-Hamiltonian system identification with analytic and neural components"
 readme = "README.md"
 license = "MIT"
-license-files = ["LICENSE", "third_party/phnn-root-LICENSE", "third_party/phnn-phlearn-LICENSE.txt"]
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
 classifiers = ["Development Status :: 3 - Alpha"]
 dependencies = ["numpy>=2.3,<3", "scipy>=1.16,<2", "torch>=2.9,<3", "tqdm>=4.66,<5"]
