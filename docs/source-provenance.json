@@ -335,21 +335,18 @@
     "original_phsi": {
       "supplied_directory": "Existing codebases/PHSI-main",
       "repository_url": "https://github.com/SINTEF/PHSI",
-      "root_named_license_files": [],
-      "status": "reuse in MIT-licensed phsi authorized by the project owner on 2026-10-28; no named root license verified in supplied tree"
+      "status": "reuse in MIT-licensed phsi authorized by the project owner on 2026-10-28"
     },
     "siphy": {
       "supplied_directory": "Existing codebases/siphy_code",
       "repository_url": null,
-      "root_named_license_files": [],
-      "status": "reuse in MIT-licensed phsi authorized by the project owner on 2026-10-28; no named root license verified in supplied tree",
+      "status": "reuse in MIT-licensed phsi authorized by the project owner on 2026-10-28",
       "public_source_status": "Supplied unpublished source; no public repository URL asserted."
     },
     "nhode_method": {
       "supplied_directory": "Existing codebases/nhode-main",
       "repository_url": "https://github.com/sunnivameltzer/nhode",
-      "root_named_license_files": [],
-      "status": "reuse in MIT-licensed phsi authorized by the project owner on 2026-10-28; no named root license verified in supplied tree",
+      "status": "reuse in MIT-licensed phsi authorized by the project owner on 2026-10-28",
       "relationship": "Trajectory-fitting method attribution; JAX scripts are not transplanted."
     }
   },
@@ -370,7 +367,6 @@
   "legacy": {
     "branch": "legacy_phsi",
     "revision": "353c4fbc3b4344345523864195dab91312ebead9",
-    "named_license_files": [],
     "preserved": true
   },
   "recipe_metadata": {
