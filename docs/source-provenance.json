@@ -353,13 +353,17 @@
   "preserved_notices": [
     {
       "source": "Existing codebases/pseudo-hamiltonian-neural-networks-main/LICENSE",
-      "preserved_as": "third_party/phnn-root-LICENSE",
+      "preserved_as": "LICENSE",
+      "section": "Original notice from pseudo-Hamiltonian neural networks (repository license)",
+      "sha256_scope": "original notice text",
       "sha256": "1516f1b9f8333d2edb1687841f84517896b3acd7fe5198bbf00f280f3009b0f8",
       "unchanged": true
     },
     {
       "source": "Existing codebases/pseudo-hamiltonian-neural-networks-main/phlearn/LICENSE.txt",
-      "preserved_as": "third_party/phnn-phlearn-LICENSE.txt",
+      "preserved_as": "LICENSE",
+      "section": "Original notice from pseudo-Hamiltonian neural networks (phlearn license)",
+      "sha256_scope": "original notice text",
       "sha256": "76a55b5d7f5a874b4ffd1ae0c6f5c32c6996dde7b47dbcf1dd608f2d08e9b8c5",
       "unchanged": true
     }
@@ -387,7 +391,7 @@
   },
   "boundaries": {
     "wholesale_upstream_source_files_copied": false,
-    "preserved_license_files_copied_unchanged": true,
+    "preserved_license_texts_copied_unchanged": true,
     "private_campaign_imports": false,
     "literature_pdfs_copied": false,
     "observations_or_trained_models_copied": false,
