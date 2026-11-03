@@ -167,7 +167,7 @@ class PruningTests(unittest.TestCase):
 
     def test_regression_whole_grid_and_no_historical_baseline(self):
         field, data = fixture()
-        fitted, info = fit_field(field, data, method="midpoint")
+        fitted, info = fit_field(field, data, method="midpoint", ridge=0.0)
         self.assertEqual(len(info["candidates"]), 5)
         self.assertNotIn("dense", info)
         self.assertTrue(info["grid_complete"])
@@ -225,6 +225,7 @@ class ReviewRegressionTests(unittest.TestCase):
                     field,
                     data,
                     method="midpoint",
+                    ridge=0.0,
                     time_limit=10.0,
                     started=0.0,
                     output_dir=Path(directory) / "run",
@@ -253,7 +254,7 @@ class ReviewRegressionTests(unittest.TestCase):
             ),
         ):
             with self.assertRaises(FitError) as caught:
-                fit_field(field, data, method="midpoint")
+                fit_field(field, data, method="midpoint", ridge=0.0)
             self.assertEqual(
                 caught.exception.fit_info["candidates"][-1]["status"], "timed_out"
             )
@@ -270,7 +271,11 @@ class ReviewRegressionTests(unittest.TestCase):
         ):
             with self.assertRaises(FitError) as caught:
                 fit_field(
-                    field, data, method="midpoint", output_dir=Path(directory) / "run"
+                    field,
+                    data,
+                    method="midpoint",
+                    ridge=0.0,
+                    output_dir=Path(directory) / "run",
                 )
             self.assertTrue(
                 all(

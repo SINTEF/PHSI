@@ -190,7 +190,9 @@ class ProgressTests(unittest.TestCase):
                 ),
                 patch("phsi.fitting._validation", return_value=1.0),
             ):
-                _, info = fit_field(field, data, method="midpoint", progress=True)
+                _, info = fit_field(
+                    field, data, method="midpoint", ridge=0.0, progress=True
+                )
             opened = [bar for event, bar in events if event == "open"]
             self.assertEqual(len(opened), 1)
             self.assertEqual(opened[0].desc, "Regression candidates")
@@ -286,7 +288,7 @@ class ProgressTests(unittest.TestCase):
             patch("phsi.fitting._validation", return_value=1.0),
         ):
             with self.assertRaises(FitError) as caught:
-                fit_field(field, data, method="midpoint", progress=True)
+                fit_field(field, data, method="midpoint", ridge=0.0, progress=True)
         bar = next(bar for event, bar in events if event == "open")
         self.assertEqual((bar.n, bar.total), (1, 5))
         self.assertTrue(bar.closed)
@@ -387,6 +389,7 @@ class ProgressTests(unittest.TestCase):
                         field,
                         data,
                         method="midpoint",
+                        ridge=0.0,
                         progress=True,
                         prune=False,
                         time_limit=10.0,

@@ -2,11 +2,7 @@
 Tests for analytic and neural model components.
 """
 
-import importlib
 import json
-import os
-import sys
-import types
 import unittest
 
 import numpy as np
@@ -153,120 +149,6 @@ class ComponentsTest(unittest.TestCase):
         self.assertTrue(bool((joint.damping_values(torch.tensor(self.x)) >= 0).all()))
         with self.assertRaises(ValueError):
             self.field(input_index=0)
-
-
-@unittest.skipUnless(
-    os.environ.get("PHSI_FROZEN_SOURCE"),
-    "Set PHSI_FROZEN_SOURCE for optional source-equivalence checks.",
-)
-class FrozenSourceTest(unittest.TestCase):
-    setUp = ComponentsTest.setUp
-    field = ComponentsTest.field
-
-    @classmethod
-    def setUpClass(cls):
-        name = "_phsi_frozen_components"
-        package = types.ModuleType(name)
-        package.__path__ = [os.environ["PHSI_FROZEN_SOURCE"]]
-        sys.modules[name] = package
-        systems = types.ModuleType(name + ".systems")
-        systems.INPUT_AMP = 1.0
-        systems.OMEGAS = (1.0,)
-        systems.input_u = None
-        sys.modules[name + ".systems"] = systems
-        cls.source = importlib.import_module(name + ".models")
-        cls.source_features = importlib.import_module(name + ".features")
-
-    def test_fixed_source_forward_and_parameter_gradient(self):
-        f = self.field(GaussianExtension(), DampingLibrary())
-        E = self.source_features.exponent_table(6, 4)
-        np.testing.assert_array_equal(f.energy.library.exponents.numpy(), E)
-        energy = self.source.FixedLibraryEnergy(
-            E,
-            f.energy.scale.numpy(),
-            coef=f.energy.coef.detach().numpy(),
-            smooth_features=f.energy.library.features,
-        )
-        damping = self.source.FeatureDamping(
-            self.source.damping_feature_list("dict"), n_dof=3
-        )
-        with torch.no_grad():
-            damping.raw.copy_(f.damping.raw)
-        original = self.source.PHModel(
-            energy, damping, self.sigma, amp=2.0, omegas=[1.0]
-        ).double()
-        x = torch.tensor(self.x, requires_grad=True)
-        actual = f(x, 2.0)
-        expected = original(
-            x,
-            torch.full((20,), np.pi / 2, dtype=torch.float64),
-            torch.zeros((20, 1), dtype=torch.float64),
-        )
-        torch.testing.assert_close(actual, expected, rtol=1e-12, atol=1e-12)
-        actual.square().sum().backward(retain_graph=True)
-        expected.square().sum().backward()
-        torch.testing.assert_close(
-            f.energy.coef.grad, original.energy.coef.grad, rtol=1e-12, atol=1e-12
-        )
-        torch.testing.assert_close(
-            f.damping.raw.grad, original.damping.raw.grad, rtol=1e-12, atol=1e-12
-        )
-
-    def test_learned_gain_initialization(self):
-        f = self.field(gain=Polynomial(), input_argument=0, seed=51)
-        dataset = types.SimpleNamespace(
-            E=f.energy.library.exponents.numpy(),
-            scales=f.energy.scale.numpy(),
-            sigma=self.sigma,
-            n_state=6,
-            sha256="test",
-            cfg=types.SimpleNamespace(amp=2.0, omegas=[1.0]),
-            structure=types.SimpleNamespace(input_index=5),
-        )
-        gain_spec = dict(
-            kind="library",
-            argument_index=0,
-            resolved=True,
-            training_dataset_sha256="test",
-            powers=list(range(5)),
-            features=[],
-            scales=f.gain.scale.numpy().tolist(),
-        )
-        original = self.source.make_model(
-            dict(energy="poly", damping="constant", gain=gain_spec), dataset, 51
-        )
-        torch.testing.assert_close(
-            f.energy.coef, original.energy.coef, rtol=1e-12, atol=1e-12
-        )
-        torch.testing.assert_close(
-            f.gain.coef, original.gain.coef, rtol=1e-12, atol=1e-12
-        )
-        x = torch.tensor(self.x)
-        torch.testing.assert_close(
-            f.gain_values(x), original.gain_values(x), rtol=1e-12, atol=1e-12
-        )
-
-    def test_neural_source_initialization_and_field(self):
-        seed = 47
-        f = self.field(Neural(), Neural(), seed=seed)
-        with torch.random.fork_rng(devices=[]):
-            torch.manual_seed(seed)
-            energy = self.source.NeuralEnergy(self.sigma)
-            damping = self.source.NeuralDamping(self.sigma[3:])
-            original = self.source.PHModel(
-                energy, damping, self.sigma, amp=2.0, omegas=[1.0]
-            ).double()
-        x = torch.tensor(self.x)
-        actual = f(x, 2.0)
-        expected = original(
-            x,
-            torch.full((20,), np.pi / 2, dtype=torch.float64),
-            torch.zeros((20, 1), dtype=torch.float64),
-        )
-        torch.testing.assert_close(actual, expected, rtol=1e-12, atol=1e-12)
-        torch.testing.assert_close(
-            f.energy_gradient(x), original.gradH(x), rtol=1e-12, atol=1e-12
-        )
 
 
 if __name__ == "__main__":

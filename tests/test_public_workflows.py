@@ -66,6 +66,7 @@ class PublicWorkflowTests(unittest.TestCase):
             u,
             validation=validation,
             method=method,
+            ridge=0.0 if method not in GRADIENT_METHODS else None,
             prune=False,
             max_steps=1,
             refit_steps=0,

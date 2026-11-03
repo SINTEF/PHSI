@@ -15,4 +15,4 @@ The circuit's constitutive motivation follows Castaños, Jayawardhana, Ortega an
 
 The public package additionally accepts arbitrary even state dimensions and explicit measured-input interpolation, and stores complete resolved function definitions, scales, masks and initialization identities for reload. Scientific equivalence tests establish bounded component and numerical contracts; they do not establish convergence, forecast rankings, scientific acceptance or reproduction of paper tables. Alternating hybrid fitting and separate constrained-energy studies are not included in the supported comparison. Nonnegative damping alone is not advertised as a guarantee of bounded states or a globally lower-bounded analytic Hamiltonian.
 
-Source identities and the adaptation map are in `docs/source-provenance.json`. The project owner’s reuse authorization is recorded in `docs/license-status.md`; existing upstream notices remain preserved.
+The package license and preserved upstream notices are in [LICENSE](../LICENSE).

@@ -130,8 +130,7 @@ class DataTests(unittest.TestCase):
 
 class IntegratorTests(unittest.TestCase):
     def test_source_equivalence(self):
-        # Literal scalar-step formulas from frozen phcompare/integrators.py.
-        # Keep this check portable: do not depend on the private campaign path.
+        # Independent scalar formulas for both fourth-order integration schemes.
         import math
 
         def source_symmetric(f, x1, x2, t, dt):

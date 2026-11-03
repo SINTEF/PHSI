@@ -7,9 +7,10 @@ The current model uses fully observed canonical coordinates: positions followed 
 ## Start with your task
 
 - For installation and basic use, see the [README](README.md).
+- For the scientific context, model definitions and experiments, read the [paper](docs/paper.md).
 - Before changing fitting, integration, normalization or pruning, read the relevant sections of [the method notes](docs/methods.md). They describe current package behavior and its numerical conventions.
 - For complete data-to-prediction examples, use the [two-mass](examples/two_mass.ipynb) and [electric-circuit](examples/electric_circuit.ipynb) notebooks.
-- For the study's recorded settings, see [paper recipes](reproduce/README.md). Keep those settings distinct from the package's convenience defaults. [Attribution notes](docs/attribution.md) identify the underlying methods and adaptations.
+- [Attribution notes](docs/attribution.md) identify the underlying methods and adaptations.
 
 ## Find the implementation
 
@@ -18,7 +19,7 @@ The current model uses fully observed canonical coordinates: positions followed 
 | Observations, trajectory splits or measured inputs | [data.py](src/phsi/data.py) | [Data and integration](tests/test_data_integrators.py) |
 | Example physics, signals or noise | [_systems.py](examples/_systems.py) and notebook settings | [Examples](tests/test_examples.py) |
 | Analytic functions, networks or model structure | [libraries.py](src/phsi/libraries.py), [fields.py](src/phsi/fields.py) | [Components](tests/test_components.py), [joint components](tests/test_joint_components.py) |
-| Fitting objectives or term selection | [fitting.py](src/phsi/fitting.py), [integrators.py](src/phsi/integrators.py), [regression.py](src/phsi/regression.py) | [Fitting](tests/test_fitting.py), [regression](tests/test_regression.py), [data and integration](tests/test_data_integrators.py) |
+| Fitting objectives or term selection | [fitting.py](src/phsi/fitting.py), [integrators.py](src/phsi/integrators.py), [regression.py](src/phsi/regression.py) | [Fitting](tests/test_fitting.py), [regression](tests/test_regression.py), [ridge](tests/test_ridge.py), [data and integration](tests/test_data_integrators.py) |
 | Public interface or printed equations | [estimator.py](src/phsi/estimator.py); feature expressions also use [libraries.py](src/phsi/libraries.py) | [Estimator](tests/test_estimator.py), [equations](tests/test_equations.py) |
 | Simulation or saved models | [simulation.py](src/phsi/simulation.py), [persistence.py](src/phsi/persistence.py) | [Estimator](tests/test_estimator.py), [public workflows](tests/test_public_workflows.py) |
 
@@ -35,6 +36,7 @@ Check feature values and derivatives, conversion to physical coefficients, equat
 - `u` is the applied signal; `forcing_gain` describes its multiplier. Currently, `forcing_gain="known"` means unit gain on the selected coordinate.
 - Keep trajectory boundaries intact. Derive normalization and data-dependent features from raw training observations; use validation data for model selection and reserve test data for evaluation.
 - Gradient-based fitting differentiates through every integration stage. Derivative and midpoint regression require analytic components.
+- Regression defaults to validation selection over six ridge strengths. Preserve the mean-loss penalty, its coefficient scaling and the full strength-by-threshold search under one timed allowance; see [ridge regression](docs/methods.md#ridge-regression).
 - Preserve independent, complete pruning searches and valid empty supports. Neural weights and separately estimated constant damping are not pruned. Details are in [term selection](docs/methods.md#function-libraries-and-term-selection).
 - Display coefficients and equations in physical coordinates. Neural input normalization must remain consistent with derivatives in those coordinates.
 - Simulation errors carry partial predictions and diagnostics; do not present them as completed trajectories. Saved models support later evaluation and simulation, but loading does not resume optimizer state.

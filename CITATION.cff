@@ -1,8 +1,8 @@
 cff-version: 1.2.0
-message: "Please also cite the relevant method papers listed in README.md."
+message: "Please cite the accompanying paper and the relevant method papers listed in README.md. The arXiv link for the accompanying paper is forthcoming."
 type: software
 title: "phsi-models: Port-Hamiltonian system identification"
-version: 1.0.0a1
+version: 1.0.0
 abstract: "Canonical, fully observed system identification with analytic, neural and hybrid energy, damping and input-gain components."
 authors:
   - name: "SINTEF"
@@ -11,3 +11,13 @@ keywords:
   - system identification
   - port-Hamiltonian systems
   - scientific machine learning
+preferred-citation:
+  type: unpublished
+  title: "Comparing model representations and fitting methods for port-Hamiltonian system identification"
+  authors:
+    - family-names: Eidnes
+      given-names: Sølve
+    - family-names: Myhr
+      given-names: Håkon Noren
+  year: 2026
+  notes: "arXiv preprint forthcoming; identifier and link will be added when available."

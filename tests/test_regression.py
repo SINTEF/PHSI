@@ -135,7 +135,7 @@ class RegressionTests(unittest.TestCase):
                 len(field.energy.coef),
             )
 
-        def zero(A, b, signed):
+        def zero(A, b, signed, ridge=0.0):
             return np.zeros(A.shape[1]), SimpleNamespace(success=True)
 
         with (
@@ -179,7 +179,7 @@ class RegressionTests(unittest.TestCase):
         f, x = self.field(2, Polynomial(1))
         tr = self.trajectory(x, np.zeros_like(x), np.ones(len(x)))
 
-        def solution(A, b, signed):
+        def solution(A, b, signed, ridge=0.0):
             return np.full(A.shape[1], 0.5), SimpleNamespace(success=True)
 
         with patch("phsi.regression.bounded_lstsq", solution):
@@ -203,7 +203,7 @@ class RegressionTests(unittest.TestCase):
         tr = self.trajectory(x, np.zeros_like(x))
         calls = []
 
-        def shrinking(A, b, signed):
+        def shrinking(A, b, signed, ridge=0.0):
             calls.append(len(calls))
             coef = np.ones(A.shape[1])
             coef[0] = 0
