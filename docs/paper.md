@@ -331,7 +331,7 @@ Our study shows that hybrid models that combine candidate-function and neural-ne
 
 ## Declaration of generative AI and AI-assisted technologies in the writing process
 
-ChatGPT/Codex (OpenAI) and Claude (Anthropic) were used to assist with setting up experiments and drafting the manuscript. The authors take full responsibility for the content of the publication.
+ChatGPT/Codex (OpenAI) and Claude (Anthropic) were used to assist with setting up experiments and drafting the manuscript. The authors reviewed all AI-assisted contributions and take full responsibility for the publication.
 
 ## References
 
