@@ -21,5 +21,8 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: python -m pytest
+      - name: Check paper experiment settings when present
+        if: hashFiles('reproduce/tests/test_*.py') != ''
+        run: python -m pytest reproduce/tests
       - run: python -m build
       - run: PHSI_DIST_DIR=dist python -m pytest tests/test_distribution.py

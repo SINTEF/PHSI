@@ -16,6 +16,7 @@ from .errors import FitError
 from .fields import build_field
 from .libraries import DampingLibrary, Neural, Polynomial, _format_number
 from .persistence import read_field, save_field
+from .regression import resolve_ridge
 from .simulation import simulate_field
 
 
@@ -103,6 +104,7 @@ class Model:
         seed=0,
         initialization_seeds=None,
         prune=True,
+        ridge=None,
         time_limit=None,
         refit_time_limit=None,
         output_dir=None,
@@ -116,6 +118,13 @@ class Model:
         """
         Fit observed trajectories, select by validation error, and return this model.
 
+        For derivative and midpoint regression, ridge=None searches six strengths
+        using validation observations. A nonnegative scalar fixes one strength;
+        a sequence searches its unique sorted strengths. The objective is mean
+        squared scaled data residual plus ridge times the coefficient norm squared.
+        Set ridge=0.0 for the previous regression objective and search size.
+        Explicit ridge is unsupported for the two Adam methods.
+
         Progress bars show initial fitting, candidate models and their refits.
         Fitting and refit bars include the latest batch loss.
         Set progress=False to hide them. Display time counts towards any time limit,
@@ -126,6 +135,7 @@ class Model:
             del self.field_
         self.fit_info_ = {"status": "failed", "method": method}
         try:
+            strengths = resolve_ridge(ridge, method)
             for name, limit in (
                 ("time_limit", time_limit),
                 ("refit_time_limit", refit_time_limit),
@@ -189,6 +199,7 @@ class Model:
                 validation_substeps=validation_substeps,
                 seed=seed,
                 prune=prune,
+                ridge=strengths,
                 time_limit=time_limit,
                 refit_time_limit=refit_time_limit,
                 output_dir=output_dir,

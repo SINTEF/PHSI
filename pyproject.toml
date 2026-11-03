@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "phsi-models"
-version = "1.0.0a1"
+version = "1.0.0"
 description = "Port-Hamiltonian system identification with analytic and neural components"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.11"
-classifiers = ["Development Status :: 3 - Alpha"]
+classifiers = ["Development Status :: 5 - Production/Stable"]
 dependencies = ["numpy>=2.3,<3", "scipy>=1.16,<2", "torch>=2.9,<3", "tqdm>=4.66,<5"]
 
 [project.optional-dependencies]
@@ -20,6 +20,9 @@ dev = ["build>=1.2", "pytest>=8", "nbformat>=5", "nbclient>=0.10", "ipykernel>=6
 
 [project.urls]
 Repository = "https://github.com/SINTEF/PHSI"
+Documentation = "https://github.com/SINTEF/PHSI/blob/main/README.md"
+Paper = "https://github.com/SINTEF/PHSI/blob/main/docs/paper.md"
+Issues = "https://github.com/SINTEF/PHSI/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

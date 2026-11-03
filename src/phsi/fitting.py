@@ -29,7 +29,7 @@ from tqdm.auto import tqdm
 from .errors import FitError, SimulationError, SupportNonconvergence
 from .integrators import held_stage_times, rollout, srk4_derivative
 from .persistence import save_field
-from .regression import fit_regression
+from .regression import fit_regression, resolve_ridge
 from .simulation import simulate_field
 
 THRESHOLDS = (0.0, 0.0001, 0.001, 0.01, 0.1)
@@ -497,7 +497,7 @@ def select_record(records, baseline=None):
             if record is baseline
             else (1 if all(value == 0 for value in order) else 2)
         )
-        return record["score"], rank, order
+        return record["score"], record.get("ridge", 0.0), rank, order
 
     return min(eligible, key=priority) if eligible else None
 
@@ -518,6 +518,7 @@ def fit_field(
     validation_substeps=4,
     seed=0,
     prune=True,
+    ridge=None,
     time_limit=None,
     refit_time_limit=None,
     output_dir=None,
@@ -534,6 +535,7 @@ def fit_field(
     methods = ("integration_scheme", "simulation_error", "derivative", "midpoint")
     if method not in methods:
         raise ValueError(f"method must be one of {methods}")
+    strengths = resolve_ridge(ridge, method)
     if method in ("derivative", "midpoint") and any(
         module.kind == "nn" for module in (field.energy, field.damping, field.gain)
     ):
@@ -605,6 +607,9 @@ def fit_field(
         selected=None,
         grid_complete=False,
     )
+    if strengths is not None:
+        info["ridge_strengths"] = strengths
+        settings["ridge_strengths"] = strengths
     states = {}
     try:
         set_damping_scales(field, observations)
@@ -695,16 +700,19 @@ def fit_field(
             baseline = None
             deadline = None if time_limit is None else started + time_limit
             work_deadline = None if deadline is None else deadline - 5
-            grid = threshold_grid(field, prune=prune)
+            grid = list(
+                itertools.product(strengths, threshold_grid(field, prune=prune))
+            )
             info["candidates"] = [
                 dict(
                     name=f"candidate-{index:02d}",
                     thresholds=thresholds,
+                    ridge=strength,
                     status="not_run",
                     selection_eligible=False,
                     history=[],
                 )
-                for index, thresholds in enumerate(grid)
+                for index, (strength, thresholds) in enumerate(grid)
             ]
             result = copy.deepcopy(field)
             candidates_bar = tqdm(
@@ -725,6 +733,7 @@ def fit_field(
                             record["thresholds"],
                             method=method,
                             deadline=work_deadline,
+                            ridge=record["ridge"],
                         )
                         record.update(history=history, **support_record(candidate))
                         candidates_bar.set_postfix_str(f"Validating {record['name']}")
@@ -748,7 +757,15 @@ def fit_field(
                             digest = save_field(
                                 candidate,
                                 checkpoint,
-                                fit_info=dict(stage=record["name"], score=score),
+                                fit_info=dict(
+                                    record,
+                                    status="running",
+                                    grid_complete=False,
+                                    selected=None,
+                                    method=method,
+                                    ridge_strengths=strengths,
+                                    stage=record["name"],
+                                ),
                             )
                             record.update(checkpoint=str(checkpoint), sha256=digest)
                         record["saved_s"] = time.monotonic() - started
@@ -824,7 +841,7 @@ def fit_field(
             status="completed",
             selected={
                 key: selected[key]
-                for key in ("name", "score", "thresholds", "checkpoint")
+                for key in ("name", "score", "thresholds", "ridge", "checkpoint")
                 if key in selected
             },
             elapsed_s=time.monotonic() - started,

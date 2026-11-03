@@ -9,12 +9,53 @@ external sources.
 
 import copy
 import time
+from collections.abc import Sequence
+from numbers import Real
 
 import numpy as np
 import torch
 from scipy.optimize import OptimizeResult, lsq_linear
 
 from .errors import SupportNonconvergence
+
+DEFAULT_RIDGE_STRENGTHS = (0.0, 1e-8, 1e-6, 1e-5, 1e-4, 1e-2)
+
+
+def _ridge_scalar(value):
+    message = "ridge strengths must be finite nonnegative real scalars."
+    if isinstance(value, (bool, np.bool_)) or not isinstance(value, Real):
+        raise ValueError(message)
+    try:
+        value = float(value)
+    except (ValueError, OverflowError) as error:
+        raise ValueError(message) from error
+    if not np.isfinite(value) or value < 0:
+        raise ValueError(message)
+    return value
+
+
+def resolve_ridge(ridge, method):
+    """
+    Resolve regression strengths; reject explicit ridge for the Adam methods.
+    """
+    if method not in ("derivative", "midpoint"):
+        if ridge is not None:
+            raise ValueError(
+                "ridge is supported only for derivative and midpoint regression."
+            )
+        return None
+    if ridge is None:
+        return list(DEFAULT_RIDGE_STRENGTHS)
+    if isinstance(ridge, Real):
+        return [_ridge_scalar(ridge)]
+    if (
+        isinstance(ridge, (str, bytes))
+        or not isinstance(ridge, (Sequence, np.ndarray))
+        or (isinstance(ridge, np.ndarray) and ridge.ndim != 1)
+        or len(ridge) == 0
+    ):
+        raise ValueError("ridge must be a scalar or a nonempty sequence of strengths.")
+    return sorted({_ridge_scalar(value) for value in ridge})
 
 
 def _array(value):
@@ -134,13 +175,15 @@ def build_design(field, x, rates, u):
     return A, b, K + L
 
 
-def bounded_lstsq(A, b, n_signed):
+def bounded_lstsq(A, b, n_signed, ridge=0.0):
     """
     Fit coefficients with either sign for energy/gain and nonnegative damping.
 
+    Minimize mean squared data residual plus ridge times the coefficient norm squared.
     Returned coefficients correct roundoff at the damping bound; the accompanying
     result retains the original solver coefficients and diagnostics.
     """
+    ridge = _ridge_scalar(ridge)
     A, b = np.asarray(A, dtype=float), np.asarray(b, dtype=float)
     if (
         A.ndim != 2
@@ -163,6 +206,10 @@ def bounded_lstsq(A, b, n_signed):
             cost=0.5 * float(b @ b),
         )
     lower = np.r_[np.full(n_signed, -np.inf), np.zeros(A.shape[1] - n_signed)]
+    if ridge > 0:
+        penalty_scale = np.sqrt(len(b)) * np.sqrt(ridge)
+        A = np.vstack((A, penalty_scale * np.eye(A.shape[1])))
+        b = np.concatenate((b, np.zeros(A.shape[1])))
     result = lsq_linear(
         A,
         b,
@@ -254,7 +301,14 @@ def _clock(deadline):
 
 
 def fit_regression(
-    field, trajectories, thresholds, *, method="derivative", max_iter=20, deadline=None
+    field,
+    trajectories,
+    thresholds,
+    *,
+    method="derivative",
+    max_iter=20,
+    deadline=None,
+    ridge=0.0,
 ):
     """
     Fit a model copy and return details of each refit.
@@ -264,6 +318,7 @@ def fit_regression(
     removed terms never return. Raise SupportNonconvergence if terms are still
     being removed at the iteration limit, without another fit.
     """
+    ridge = _ridge_scalar(ridge)
     if method not in ("derivative", "midpoint"):
         raise ValueError("Regression supports derivative or midpoint observations.")
     if (
@@ -313,7 +368,9 @@ def fit_regression(
     for iteration in range(1, max_iter + 1):
         _clock(deadline)
         columns = np.flatnonzero(active)
-        solution, result = bounded_lstsq(A[:, columns], b, int(active[:n_signed].sum()))
+        solution, result = bounded_lstsq(
+            A[:, columns], b, int(active[:n_signed].sum()), ridge=ridge
+        )
         _clock(deadline)
         if (
             not result.success
@@ -337,10 +394,14 @@ def fit_regression(
                 proposed[block] &= _damping_scales(fitted).reshape(-1) > 0
         changed = not np.array_equal(proposed, active)
         objective = float(np.mean((A @ coefficient - b) ** 2))
+        penalized_coefficient = np.sqrt(ridge) * coefficient
+        ridge_penalty = float(penalized_coefficient @ penalized_coefficient)
         history.append(
             {
                 "iteration": iteration,
                 "objective": objective,
+                "ridge_penalty": ridge_penalty,
+                "penalized_objective": objective + ridge_penalty,
                 "support_changed": changed,
                 "active": {
                     name: active[block].tolist() for name, block in blocks.items()

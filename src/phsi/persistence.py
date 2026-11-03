@@ -13,7 +13,7 @@ import torch
 from .fields import field_from_configuration
 
 SCHEMA = "phsi-model-v1"
-PACKAGE_VERSION = "1.0.0a1"
+PACKAGE_VERSION = "1.0.0"
 
 
 def _plain(value):
@@ -127,7 +127,7 @@ def read_field(path, custom_components=None):
         not isinstance(payload, dict)
         or set(payload) != required
         or payload["schema"] != SCHEMA
-        or payload["package_version"] not in (PACKAGE_VERSION, "0.1.0")
+        or payload["package_version"] not in (PACKAGE_VERSION, "1.0.0a1", "0.1.0")
     ):
         raise ValueError("Unsupported model checkpoint schema or package version.")
     cfg, state = payload["configuration"], payload["state_dict"]

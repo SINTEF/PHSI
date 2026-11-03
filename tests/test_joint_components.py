@@ -70,7 +70,8 @@ class JointComponentsTests(unittest.TestCase):
         trajectory = Trajectory(x, times, InputSignal(times, u), np.zeros_like(x))
         calls = []
 
-        def solution(A, target, signed):
+        def solution(A, target, signed, ridge=0.0):
+            self.assertEqual(ridge, 0.0)
             calls.append((A.shape[1], signed))
             result = np.full(A.shape[1], 0.5)
             if len(calls) == 1:
@@ -98,7 +99,8 @@ class JointComponentsTests(unittest.TestCase):
         for component in (field.energy, field.gain, field.damping):
             self.assertFalse(bool(component.mask.any()))
 
-        def zeros(A, target, signed):
+        def zeros(A, target, signed, ridge=0.0):
+            self.assertEqual(ridge, 0.0)
             return np.zeros(A.shape[1]), SimpleNamespace(success=True)
 
         with patch("phsi.regression.bounded_lstsq", side_effect=zeros):

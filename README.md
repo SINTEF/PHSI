@@ -8,28 +8,22 @@ The package supports fully observed canonical coordinates, diagonal damping and 
 
 ## Installation
 
-`phsi-models` requires Python 3.11 or newer. Install the alpha preview with pip:
+`phsi-models` requires Python 3.11 or newer. Install with pip:
 
 ```bash
-python -m pip install 'phsi-models==1.0.0a1'
+python -m pip install phsi-models
 ```
 
-In your own uv project, add the package once, then run your script:
+In your own uv project:
 
 ```bash
-uv add 'phsi-models==1.0.0a1'
+uv add phsi-models
 uv run your_script.py
 ```
 
-In a cloned PHSI repository, run from the repository root; uv installs the local package and its dependencies automatically:
+From a cloned repository, run `uv run your_script.py` at the repository root. For notebooks, use `uv run --extra examples jupyter lab`.
 
-```bash
-uv run your_script.py
-```
-
-To open the notebooks with their optional dependencies, use `uv run --extra examples jupyter lab`. With pip, install an editable checkout using `python -m pip install -e '.[examples]'`.
-
-This alpha precedes the paper release; the interface may still change.
+Version 1.0.0 is the first stable release. Python code uses `import phsi`.
 
 ## Quickstart
 
@@ -47,7 +41,7 @@ model = phsi.model(
 )
 ```
 
-This example uses states ordered as `(position, momentum)` and learns polynomial energy and forcing gain. Use `"nn"` for a neural network model instead of an analytic expression. For analytic damping, use `phsi.DampingLibrary(kind="polynomial")` or `phsi.DampingLibrary(kind="gaussian")`. See the [method notes](docs/methods.md) for component choices and fitting options.
+This example uses states ordered as `(position, momentum)` and learns polynomial energy and forcing gain. Use `"nn"` for a neural network model instead of an analytic expression. For analytic damping, use `phsi.DampingLibrary(kind="polynomial")` or `phsi.DampingLibrary(kind="gaussian")`. See the [method notes](https://github.com/SINTEF/PHSI/blob/main/docs/methods.md) for component choices and fitting options.
 
 ### Fit observations
 
@@ -72,17 +66,17 @@ Printing shows the fitted equations, with analytic coefficients and neural netwo
 
 ## Agent guide
 
-This is a deliberately narrow implementation. The agent guide helps users and coding agents extend it, for example by adding more candidate functions for the analytic models, editing the neural network architectures, or testing the methods on different data. See [AGENTS.md](AGENTS.md) for the code map, extension points and checks to run.
+This is a deliberately narrow implementation. The agent guide helps users and coding agents extend it, for example by adding more candidate functions for the analytic models, editing the neural network architectures, or testing the methods on different data. See [AGENTS.md](https://github.com/SINTEF/PHSI/blob/main/AGENTS.md) for the guide.
 
 ## Sources
 
-This package accompanies the manuscript *Comparing model representations and fitting methods for port-Hamiltonian system identification*, by Sølve Eidnes and Håkon Noren Myhr (in preparation).
+This package accompanies the manuscript [*Comparing model representations and fitting methods for port-Hamiltonian system identification*](https://github.com/SINTEF/PHSI/blob/main/docs/paper.md), by Sølve Eidnes and Håkon Noren Myhr. **arXiv preprint: forthcoming; the link will be added here when it is available.**
 
-The package builds on the following code and publications, with adaptations described in the [attribution notes](docs/attribution.md):
+The package builds on the following code and publications, with adaptations described in the [attribution notes](https://github.com/SINTEF/PHSI/blob/main/docs/attribution.md):
 
 - Holmsen, Eidnes and Riemer-Sørensen: [Pseudo-Hamiltonian system identification](https://doi.org/10.3934/jcd.2024001) ([code](https://github.com/SINTEF/PHSI/tree/legacy_phsi)).
 - Eidnes and coauthors: [Pseudo-Hamiltonian neural networks with state-dependent external forces](https://doi.org/10.1016/j.physd.2023.133673) ([code](https://github.com/SINTEF/pseudo-hamiltonian-neural-networks)).
 - Meltzer, Eidnes and Stasik: [Learning partially observed systems with neural Hamiltonian ordinary differential equations](https://arxiv.org/abs/2605.23510) ([code](https://github.com/sunnivameltzer/nhode)).
 - Myhr, Eidnes and Kutz: [SIPHy: Sparse identification of port-Hamiltonian systems from noisy data](https://arxiv.org/abs/2609.20399) (code not yet public).
 
-Licensed under the [MIT license](LICENSE).
+Licensed under the [MIT license](https://github.com/SINTEF/PHSI/blob/main/LICENSE).

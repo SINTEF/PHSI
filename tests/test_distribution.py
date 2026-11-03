@@ -39,6 +39,25 @@ def test_distribution_keeps_private_instructions_out_and_examples_lowercase():
         assert "src/phsi/__init__.py" in names
         assert "LICENSE" in names
         assert "LICENSE-MIT.proposed" not in names
+        assert "docs/paper-source.json" not in names
+        assert "docs/source-provenance.json" not in names
+        assert "docs/license-status.md" not in names
+        assert "docs/publishing.md" not in names
+        assert not any(name.startswith("development_checks/") for name in names)
+        with tarfile.open(source) as test_archive:
+            component_name = next(
+                name
+                for name in test_archive.getnames()
+                if name.endswith("/tests/test_components.py")
+            )
+            component_tests = test_archive.extractfile(component_name).read()
+        assert b"PHSI_FROZEN_SOURCE" not in component_tests
+        assert not any(name.startswith("docs/paper-assets/") for name in names)
+        assert {
+            "docs/paper-figures/model-training-overview.png",
+            "docs/paper-figures/mechanical-input-gain.png",
+            "docs/paper-figures/circuit-trajectory-comparison.png",
+        } <= names
         assert "AGENTS.md" in names
         assert "docs/public-agent-guide.md" not in names
         assert "RELEASE_POLICY.md" not in names
@@ -52,7 +71,7 @@ def test_distribution_keeps_private_instructions_out_and_examples_lowercase():
         assert "Private development instructions" not in guide
         assert {"examples/two_mass.ipynb", "examples/electric_circuit.ipynb"} <= names
         assert not any(
-            name.startswith(("Examples/", ".local/", "examples/output/"))
+            name.startswith(("Examples/", ".local/", "examples/output/", "reproduce/"))
             for name in names
         )
     for wheel in wheels:

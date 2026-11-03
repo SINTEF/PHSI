@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version to publish (must match pyproject.toml, e.g. 1.0.0a1)'
+        description: 'Version to publish (must match pyproject.toml, e.g. 1.0.0)'
         required: true
         type: string
 permissions:

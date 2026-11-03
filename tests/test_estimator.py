@@ -55,22 +55,24 @@ class EstimatorTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             m.simulate([0.0, 1.0], [0.0, 1.0])
         self.assertFalse(hasattr(phsi, "phsi"))
-        self.assertEqual(phsi.__version__, "1.0.0a1")
+        self.assertEqual(phsi.__version__, "1.0.0")
 
-    def test_checkpoint_records_package_version_and_loads_development_models(self):
+    def test_checkpoint_records_version_and_loads_earlier_models(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "model.phsi"
             model = self.model()
             model.save(path)
             payload = torch.load(path, weights_only=True)
             self.assertEqual(payload["package_version"], phsi.__version__)
-            # Existing local models used this label with the same schema.
-            payload["package_version"] = "0.1.0"
-            torch.save(payload, path)
-            restored = phsi.load(path)
-            np.testing.assert_array_equal(
-                restored.hamiltonian([1.0, 2.0]), model.hamiltonian([1.0, 2.0])
-            )
+            # Development and published alpha models use the same schema.
+            for version in ("0.1.0", "1.0.0a1"):
+                with self.subTest(saved_version=version):
+                    payload["package_version"] = version
+                    torch.save(payload, path)
+                    restored = phsi.load(path)
+                    np.testing.assert_array_equal(
+                        restored.hamiltonian([1.0, 2.0]), model.hamiltonian([1.0, 2.0])
+                    )
 
     def test_public_analytic_component_aliases(self):
         t = np.linspace(0.0, 0.3, 30)
