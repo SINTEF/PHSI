@@ -1,5 +1,7 @@
 # Port-Hamiltonian system identification
 
+> **Paper results.** This branch preserves the version 1.0.0 package for *Comparing model representations and fitting methods for port-Hamiltonian system identification*, with the paper experiment settings in [`reproduce/`](reproduce/README.md). It will not track later development on `main`, but may be updated for revisions before publication. The accompanying documentation records which campaign settings are included and what is needed to run them. Run their configuration tests with `python -m pytest reproduce/tests`.
+
 The Python package `phsi-models` (imported as `phsi`) learns port-Hamiltonian models from observed trajectories. Either analytic functions or neural networks can be fitted to represent the Hamiltonian function $H$, damping $R$ and forcing gain $G$. With external input $u$ and canonical interconnection matrix $J$, this gives ordinary differential equations in port-Hamiltonian form:
 
 $$\dot x=(J-R(x))\nabla H(x)+G(x)u(t).$$
