@@ -1,6 +1,6 @@
 # Paper experiment settings
 
-The [paper](../docs/paper.md) describes the study and reported results.
+The [paper](https://arxiv.org/abs/2611.05031) describes the study and reported results; a [Markdown version](../docs/paper.md) is included in this repository.
 
 These configurations retain the paper's recorded settings and initialization identities for fresh fits on supplied observations. They aim at comparable behavior; they do not replay historical weights or promise identical numerical results.
 

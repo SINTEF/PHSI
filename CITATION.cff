@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "Please cite the accompanying paper and the relevant method papers listed in README.md. The arXiv link for the accompanying paper is forthcoming."
+message: "Please cite the accompanying paper and the relevant method papers listed in README.md."
 type: software
 title: "phsi-models: Port-Hamiltonian system identification"
 version: 1.0.0
@@ -12,7 +12,7 @@ keywords:
   - port-Hamiltonian systems
   - scientific machine learning
 preferred-citation:
-  type: unpublished
+  type: article
   title: "Comparing model representations and fitting methods for port-Hamiltonian system identification"
   authors:
     - family-names: Eidnes
@@ -20,4 +20,6 @@ preferred-citation:
     - family-names: Myhr
       given-names: Håkon Noren
   year: 2026
-  notes: "arXiv preprint forthcoming; identifier and link will be added when available."
+  journal: arXiv
+  doi: "10.48550/arXiv.2611.05031"
+  url: "https://arxiv.org/abs/2611.05031"

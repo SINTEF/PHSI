@@ -21,7 +21,7 @@ dev = ["build>=1.2", "pytest>=8", "nbformat>=5", "nbclient>=0.10", "ipykernel>=6
 [project.urls]
 Repository = "https://github.com/SINTEF/PHSI"
 Documentation = "https://github.com/SINTEF/PHSI/blob/main/README.md"
-Paper = "https://github.com/SINTEF/PHSI/blob/main/docs/paper.md"
+Paper = "https://arxiv.org/abs/2611.05031"
 Issues = "https://github.com/SINTEF/PHSI/issues"
 
 [tool.setuptools.packages.find]

@@ -72,7 +72,7 @@ This is a deliberately narrow implementation. The agent guide helps users and co
 
 ## Sources
 
-This package accompanies the manuscript [*Comparing model representations and fitting methods for port-Hamiltonian system identification*](https://github.com/SINTEF/PHSI/blob/main/docs/paper.md), by Sølve Eidnes and Håkon Noren Myhr. **arXiv preprint: forthcoming; the link will be added here when it is available.**
+This package accompanies [*Comparing model representations and fitting methods for port-Hamiltonian system identification*](https://arxiv.org/abs/2611.05031), by Sølve Eidnes and Håkon Noren Myhr. A [Markdown version](https://github.com/SINTEF/PHSI/blob/main/docs/paper.md) is included in this repository.
 
 The package builds on the following code and publications, with adaptations described in the [attribution notes](https://github.com/SINTEF/PHSI/blob/main/docs/attribution.md):
 

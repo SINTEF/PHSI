@@ -2,7 +2,7 @@
 
 This package learns a canonical, fully observed dynamical model by separating energy, damping and measured forcing, then selecting analytic terms using validation predictions.
 
-For the scientific presentation and experimental results, see the [paper](paper.md). These notes describe the package interface and current implementation; its convenience defaults differ from the paper settings.
+For the scientific presentation and experimental results, see the [arXiv paper](https://arxiv.org/abs/2611.05031) or its [Markdown version](paper.md). These notes describe the package interface and current implementation; its convenience defaults differ from the paper settings.
 
 ## Structure and conventions
 
