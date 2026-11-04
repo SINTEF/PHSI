@@ -7,7 +7,7 @@ The current model uses fully observed canonical coordinates: positions followed 
 ## Start with your task
 
 - For installation and basic use, see the [README](README.md).
-- For the scientific context, model definitions and experiments, read the [paper](docs/paper.md).
+- For the scientific context, model definitions and experiments, read the [arXiv paper](https://arxiv.org/abs/2611.05031) or its [Markdown version](docs/paper.md).
 - Before changing fitting, integration, normalization or pruning, read the relevant sections of [the method notes](docs/methods.md). They describe current package behavior and its numerical conventions.
 - For complete data-to-prediction examples, use the [two-mass](examples/two_mass.ipynb) and [electric-circuit](examples/electric_circuit.ipynb) notebooks.
 - [Attribution notes](docs/attribution.md) identify the underlying methods and adaptations.
