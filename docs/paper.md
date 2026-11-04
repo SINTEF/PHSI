@@ -1,6 +1,6 @@
 # Comparing model representations and fitting methods for port-Hamiltonian system identification
 
-**arXiv preprint: forthcoming; the link will be added here when it is available.**
+**arXiv preprint:** [arXiv:2611.05031](https://arxiv.org/abs/2611.05031)
 
 This is a Markdown transcription of the paper.
 
