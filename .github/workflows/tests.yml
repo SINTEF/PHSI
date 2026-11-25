@@ -17,12 +17,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m pip install -e '.[dev,examples]'
-      - run: ruff check .
-      - run: ruff format --check .
-      - run: python -m pytest
+      - run: python -m pip install uv==0.13.10
+      - run: uv sync --locked --extra dev --extra examples --python "${{ matrix.python }}"
+      - run: uv pip check --python .venv/bin/python
+      - run: uv run --no-sync ruff check .
+      - run: uv run --no-sync ruff format --check .
+      - run: uv run --no-sync python -m pytest
       - name: Check paper experiment settings when present
         if: hashFiles('reproduce/tests/test_*.py') != ''
-        run: python -m pytest reproduce/tests
-      - run: python -m build
-      - run: PHSI_DIST_DIR=dist python -m pytest tests/test_distribution.py
+        run: uv run --no-sync python -m pytest reproduce/tests
+      - run: uv run --no-sync python -m build
+      - run: PHSI_DIST_DIR=dist uv run --no-sync python -m pytest tests/test_distribution.py
