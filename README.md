@@ -8,7 +8,7 @@ The package supports fully observed canonical coordinates, diagonal damping and 
 
 ## Installation
 
-`phsi-models` requires Python 3.11 or newer. Install with pip:
+`phsi-models` requires Python 3.11.5 or newer. Install with pip:
 
 ```bash
 python -m pip install phsi-models
