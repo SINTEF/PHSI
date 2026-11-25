@@ -43,7 +43,7 @@ Check feature values and derivatives, conversion to physical coefficients, equat
 
 ## Check a change
 
-Use a Python 3.11-or-newer virtual environment. From the repository root, install development dependencies with:
+Use a Python 3.11.5-or-newer virtual environment. From the repository root, install development dependencies with:
 
 ```bash
 python -m pip install -e '.[dev,examples]'
